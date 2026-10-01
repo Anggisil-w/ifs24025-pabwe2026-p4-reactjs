@@ -1,11 +1,11 @@
-import { login, register, logout } from "../api/authApi";
+import { loginApi, registerApi, logoutApi } from "../api/authApi";
 import { putAccessToken, removeAccessToken } from "../../../helpers/apiHelper";
 import { showErrorDialog, showSuccessDialog, firstFieldError } from "../../../helpers/toolsHelper";
 import { isAuthLogin, isAuthRegister, isAuthLogout } from "./reducer";
 
 export const asyncLogin = (form) => async (dispatch) => {
   try {
-    const { data } = await login(form);
+    const { data } = await loginApi(form);
     putAccessToken(data.token);
     dispatch(isAuthLogin({ token: data.token, user: data.user }));
     return true;
@@ -14,7 +14,7 @@ export const asyncLogin = (form) => async (dispatch) => {
 
 export const asyncRegister = (form) => async (dispatch) => {
   try {
-    await register(form);
+    await registerApi(form);
     dispatch(isAuthRegister());
     await showSuccessDialog("Akun dibuat, silakan masuk.");
     return true;
@@ -22,7 +22,7 @@ export const asyncRegister = (form) => async (dispatch) => {
 };
 
 export const asyncLogout = () => async (dispatch) => {
-  try { await logout(); } catch { /* token mungkin sudah kedaluwarsa */ }
+  try { await logoutApi(); } catch { /* token mungkin sudah kedaluwarsa */ }
   removeAccessToken();
   dispatch(isAuthLogout());
 };
